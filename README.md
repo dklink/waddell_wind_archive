@@ -11,4 +11,4 @@ export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
 to your shell profile.
 
 ### Environment Variables
-Make sure to fill in the proper environment variables as described in the `.env` file.
+Make a copy of the `.env_sample` file named `.env`, and fill in the fields appropriately.
