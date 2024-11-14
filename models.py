@@ -8,5 +8,5 @@ class Images(Base):
     __tablename__ = "images"
 
     id = Column(Integer, primary_key=True)
-    archived_at = Column(TIMESTAMP(timezone=True), index=True)
+    archived_at = Column(TIMESTAMP(timezone=True), index=True, nullable=False)
     image_path = Column(String, nullable=False)

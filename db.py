@@ -1,7 +1,10 @@
 import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base  # Import the base for creating tables
+
+load_dotenv()
 
 # Define the database URL
 DATABASE_URL = f"postgresql://{os.environ["db_username"]}:{os.environ["db_password"]}@localhost:5432/{os.environ["db_name"]}"
