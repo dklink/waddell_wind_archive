@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from models import Base  # Import the base for creating tables
 
 # Define the database URL
-DATABASE_URL = f"postgresql://{os.environ["db_username"]}:{os.environ["db_password"]}@localhost:5432/waddell_wind_archive"
+DATABASE_URL = f"postgresql://{os.environ["db_username"]}:{os.environ["db_password"]}@localhost:5432/{os.environ["db_name"]}"
 
 # Set up the SQLAlchemy engine
 engine = create_engine(DATABASE_URL)

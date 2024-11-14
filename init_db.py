@@ -38,7 +38,7 @@ if __name__ == "__main__":
     load_dotenv()
     launch_postgres()
     create_database(
-        dbname="waddell_wind_archive",
+        dbname=os.environ["db_name"],
         user=os.environ["db_username"],
         password=os.environ["db_password"],
     )
