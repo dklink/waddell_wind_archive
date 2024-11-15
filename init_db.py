@@ -1,16 +1,10 @@
 import os
-import subprocess
-from time import sleep
 
 import psycopg2
 from dotenv import load_dotenv
 from psycopg2 import sql
 
-
-def launch_postgres():
-    subprocess.run(["open", "/Applications/Postgres.app"])
-    print("Waiting for postgres to launch...")
-    sleep(0.5)
+from launch_db import launch_postgres
 
 
 def create_database(dbname, user, password, host="localhost", port="5432"):
