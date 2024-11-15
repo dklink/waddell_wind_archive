@@ -38,7 +38,7 @@ if __name__ == "__main__":
     load_dotenv()
     launch_postgres()
     create_database(
-        dbname=os.environ["db_name"],
-        user=os.environ["db_username"],
-        password=os.environ["db_password"],
+        dbname=os.environ["DB_NAME"],
+        user=os.environ["DB_USERNAME"],
+        password=os.environ["DB_PASSWORD"],
     )
