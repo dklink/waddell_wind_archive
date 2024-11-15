@@ -11,9 +11,10 @@ pip install -r requirements.txt  # install requirements into this venv
 ```
 ### Postgres
 This application requires Postgres to be installed on the host machine.  Use the Postgers.app installation method found here: https://postgresapp.com/.
-If you want, you can add postgres to your shell path by adding the line
+Then add the command line tools to your path:
 ```
-export PATH="/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH"
+sudo mkdir -p /etc/paths.d &&
+echo /Applications/Postgres.app/Contents/Versions/latest/bin | sudo tee /etc/paths.d/postgresapp
 ```
 to your shell profile.
 

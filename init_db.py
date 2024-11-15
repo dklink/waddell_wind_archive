@@ -1,10 +1,9 @@
 import os
+import subprocess
 
 import psycopg2
 from dotenv import load_dotenv
 from psycopg2 import sql
-
-from launch_db import launch_postgres
 
 
 def create_database(dbname, user, password, host="localhost", port="5432"):
@@ -26,8 +25,8 @@ def create_database(dbname, user, password, host="localhost", port="5432"):
 
 
 if __name__ == "__main__":
+    subprocess.run(["sh", "start_db.sh"])
     load_dotenv()
-    launch_postgres()
     create_database(
         dbname=os.environ["DB_NAME"],
         user=os.environ["DB_USERNAME"],
