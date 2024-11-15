@@ -1,8 +1,9 @@
 import os
 import subprocess
 from time import sleep
-from dotenv import load_dotenv
+
 import psycopg2
+from dotenv import load_dotenv
 from psycopg2 import sql
 
 
@@ -28,10 +29,6 @@ def create_database(dbname, user, password, host="localhost", port="5432"):
         print(f"Database '{dbname}' already exists.")
     finally:
         connection.close()
-
-
-def run_migrations():
-    pass
 
 
 if __name__ == "__main__":
