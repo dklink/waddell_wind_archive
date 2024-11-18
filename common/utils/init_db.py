@@ -1,11 +1,10 @@
 import os
 import subprocess
-from pathlib import Path
 
 import psycopg2
 from psycopg2 import sql
 
-from src.database import start_db_script
+from common import start_db_script
 
 
 def create_database(dbname, user, password, host="localhost", port="5432"):

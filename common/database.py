@@ -3,7 +3,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from src.database.models import Base  # Import the base for creating tables
+from common.models import Base
 
 # Define the database URL
 if "DATABASE_URL" in os.environ:
@@ -16,8 +16,3 @@ engine = create_engine(DATABASE_URL)
 
 # Set up session maker
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-# Function to initialize tables (optional)
-def init_db():
-    Base.metadata.create_all(bind=engine)

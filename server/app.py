@@ -1,13 +1,16 @@
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Flask, abort, send_file
 from sqlalchemy import func
 
-from src.database.db import SessionLocal
-from src.database.models import Images
+from common.database import SessionLocal
+from common.models import Images
 
 app = Flask(__name__)
+
+LOCAL_DEV = False
 
 
 @app.route("/get/<timestamp>", methods=["GET"])
@@ -42,17 +45,21 @@ def get_nearest_image(timestamp):
 
         # Check if the image file exists
         image_path = Path(nearest_image.image_path)
-        path_in_docker = Path("/waddell_wind/images") / image_path.name
-        if not path_in_docker.is_file():
+        if not LOCAL_DEV:  # for docker deployment
+            image_path = Path("/waddell_wind/images") / image_path.name
+        if not image_path.is_file():
             abort(404, description=f"Image file not found at expected path.")
 
         # Return the image file using send_file
         return send_file(
-            path_in_docker,
+            image_path,
             mimetype="image/gif",
             as_attachment=False,  # Set to True to prompt download
         )
 
 
 if __name__ == "__main__":
-    app.run()
+    if "--local" in sys.argv:
+        LOCAL_DEV = True
+
+    app.run(debug=True)

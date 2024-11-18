@@ -10,10 +10,11 @@ from pathlib import Path
 
 import requests
 
-from src.archiver.constants import LIVE_WADDELL_WIND_URL
-from src.database import start_db_script
-from src.database.db import SessionLocal
-from src.database.models import Images
+from common import start_db_script
+from common.database import SessionLocal
+from common.models import Images
+
+LIVE_WADDELL_WIND_URL = "https://mapper.weatherflow.com/cgi-bin/tinyGv2Wap.gif?t=213&d=t&c=0&cb=41741&wid=1&width=900&height=220&sh=0&eh=23"
 
 
 def archive_image():
