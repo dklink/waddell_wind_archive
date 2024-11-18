@@ -42,12 +42,13 @@ def get_nearest_image(timestamp):
 
         # Check if the image file exists
         image_path = Path(nearest_image.image_path)
-        if not image_path.is_file():
+        path_in_docker = Path("/waddell_wind/images") / image_path.name
+        if not path_in_docker.is_file():
             abort(404, description=f"Image file not found at expected path.")
 
         # Return the image file using send_file
         return send_file(
-            image_path,
+            path_in_docker,
             mimetype="image/gif",
             as_attachment=False,  # Set to True to prompt download
         )

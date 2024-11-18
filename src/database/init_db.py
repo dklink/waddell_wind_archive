@@ -3,7 +3,6 @@ import subprocess
 from pathlib import Path
 
 import psycopg2
-from dotenv import load_dotenv
 from psycopg2 import sql
 
 from src.database import start_db_script
@@ -29,7 +28,6 @@ def create_database(dbname, user, password, host="localhost", port="5432"):
 
 if __name__ == "__main__":
     subprocess.run(["sh", start_db_script])
-    load_dotenv()
     create_database(
         dbname=os.environ["DB_NAME"],
         user=os.environ["DB_USERNAME"],

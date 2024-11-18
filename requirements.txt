@@ -1,6 +1,4 @@
-python-dotenv
-psycopg2
 sqlalchemy
-alembic
+psycopg2-binary
 requests
 flask

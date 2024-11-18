@@ -1,0 +1,19 @@
+# Ignore the 'archiver' module
+src/archiver/
+
+# Ignore Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore Git-related files
+.git/
+
+# Ignore virtual environment files
+venv/
+
+# Ignore environment files
+*.env
+
+# Ignore logs
+logs
