@@ -1,8 +1,10 @@
 import os
+
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Base  # Import the base for creating tables
+
+from src.database.models import Base  # Import the base for creating tables
 
 load_dotenv()
 

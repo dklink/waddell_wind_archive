@@ -1,17 +1,19 @@
 # An archive script for a web image link.
 # Pulls the latest image, persists it in local filesystem,
 #  and writes metadata to a postgresql database.
-# Assumes database has already been set up, migrated etc.
+# Assumes database has already been initialized and migrated.
 
 import os
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
 
-from constants import LIVE_WADDELL_WIND_URL
-from db import SessionLocal
-from models import Images
+from src.archiver.constants import LIVE_WADDELL_WIND_URL
+from src.database import start_db_script
+from src.database.db import SessionLocal
+from src.database.models import Images
 
 
 def archive_image():
@@ -42,4 +44,5 @@ def archive_image():
 
 
 if __name__ == "__main__":
+    subprocess.run(["sh", start_db_script])
     archive_image()

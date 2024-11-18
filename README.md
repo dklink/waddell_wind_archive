@@ -24,11 +24,17 @@ Make a copy of the `.env_sample` file named `.env`, and fill in the fields appro
 ### Create/migrate database
 To create the initial database, run
 ```
-python init_db.py
+python -m src.database.init_db
 ```
 This will open the Postegres app (which will start the db if it's not already running), then create an new database (if it doesn't exist) with the name you set in `.env`.
 
 To perform migrations, run
 ```
 alembic upgrade head
+```
+
+## Usage
+To archive an image:
+```
+python -m src.archiver.archive_image
 ```
