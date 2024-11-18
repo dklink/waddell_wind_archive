@@ -3,15 +3,14 @@
 #  and writes metadata to a postgresql database.
 # Assumes database has already been initialized and migrated.
 
-import os
 import subprocess
 from datetime import datetime, timezone
-from pathlib import Path
 
 import requests
 
 from common import start_db_script
 from common.database import SessionLocal
+from common.image_store import IMAGE_STORE_PATH
 from common.models import Images
 
 LIVE_WADDELL_WIND_URL = "https://mapper.weatherflow.com/cgi-bin/tinyGv2Wap.gif?t=213&d=t&c=0&cb=41741&wid=1&width=900&height=220&sh=0&eh=23"
@@ -19,15 +18,14 @@ LIVE_WADDELL_WIND_URL = "https://mapper.weatherflow.com/cgi-bin/tinyGv2Wap.gif?t
 
 def archive_image():
     # 1. download image to local filesystem
-    image_store = Path(os.environ["IMAGE_STORE_PATH"])
-    if not image_store.exists():
-        image_store.mkdir(parents=True)
+    if not IMAGE_STORE_PATH.exists():
+        IMAGE_STORE_PATH.mkdir(parents=True)
 
     img_data = requests.get(LIVE_WADDELL_WIND_URL).content
     archived_at = datetime.now(timezone.utc)
     print(f"Image successfully downloaded at timestamp {archived_at.timestamp()}")
 
-    img_path = image_store / f"{int(archived_at.timestamp())}.gif"
+    img_path = IMAGE_STORE_PATH / f"{int(archived_at.timestamp())}.gif"
     with open(img_path, "wb") as handler:
         handler.write(img_data)
     print(f"Image successfully written to disk at {img_path}")

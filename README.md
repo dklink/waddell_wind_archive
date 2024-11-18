@@ -56,7 +56,7 @@ python -m archiver.archive_image
 The backend app exposes an API with a `/get/<timestamp>` that returns the nearest image to that timestamp in the database.
 
 #### Running locally
-`python -m server.app --local`.
+`python -m server.app`.
 
 #### Via docker
 `sh docker_build.sh`

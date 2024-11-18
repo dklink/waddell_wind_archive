@@ -1,4 +1,3 @@
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -6,6 +5,7 @@ from flask import Flask, abort, send_file
 from sqlalchemy import func
 
 from common.database import SessionLocal
+from common.image_store import IMAGE_STORE_PATH
 from common.models import Images
 
 app = Flask(__name__)
@@ -44,9 +44,8 @@ def get_nearest_image(timestamp):
             abort(404, description="No images found in the database.")
 
         # Check if the image file exists
-        image_path = Path(nearest_image.image_path)
-        if not LOCAL_DEV:  # for docker deployment
-            image_path = Path("/waddell_wind/images") / image_path.name
+        image_filename = Path(nearest_image.image_path).name
+        image_path = IMAGE_STORE_PATH / image_filename
         if not image_path.is_file():
             abort(404, description=f"Image file not found at expected path.")
 
@@ -59,7 +58,4 @@ def get_nearest_image(timestamp):
 
 
 if __name__ == "__main__":
-    if "--local" in sys.argv:
-        LOCAL_DEV = True
-
     app.run(debug=True)
