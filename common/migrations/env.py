@@ -1,3 +1,4 @@
+import os
 import sys
 from logging.config import fileConfig
 
@@ -6,7 +7,6 @@ from sqlalchemy import engine_from_config, pool
 
 sys.path.insert(0, "../..")
 
-from common.database import DATABASE_URL
 from common.models import Base
 
 # this is the Alembic Config object, which provides
@@ -14,7 +14,7 @@ from common.models import Base
 config = context.config
 
 # override stock url from alembic.ini so we can pull values from .env file
-config.set_main_option("sqlalchemy.url", DATABASE_URL)
+config.set_main_option("sqlalchemy.url", os.environ["LOCAL_DATABASE_URL"])
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

@@ -3,14 +3,12 @@
 ## Installation
 The following instructions are for MacOS.
 ### Requirements
-Python 3.13 recommended.  System components are meant to be used via docker - but for local development, you can install requirements like so:
+Python 3.13 recommended.  For setup, we'll need to set up a minimal dev environment:
 ```
-python -m venv venv_archiver  # create a venv for just the archiver
-source venv_archiver/bin/activate  # activate venv
-pip install -r archiver/requirements.txt
+python -m venv venv_dev
+source venv_dev/bin/activate
 pip install -r requirements-dev.txt
 ```
-And something similar can be done for doing development work on the server.
 ### Postgres
 This application requires Postgres to be installed on the host machine.  Use the Postgers.app installation method found here: https://postgresapp.com/.
 Then add the command line tools to your path by running the following lines:
@@ -35,6 +33,10 @@ To perform migrations, navigate to `common/migrations` and run
 alembic upgrade head
 ```
 
+### Docker
+You'll also need docker.  Go install Docker Desktop if you don't already have it.
+
+
 ## Usage
 ### Image archiver
 To archive an image:
@@ -54,9 +56,6 @@ To start the server:
 docker-compose build server  # only need to do once
 docker-compose up server
 ```
-
-Or locally:
-
 
 Exercise the server by visiting
 `http://127.0.0.1:5000/get/<timestamp>` in a browser.  Insert a recent unix timestamp (e.g. 1731955206), and you should see the nearest archived image!
