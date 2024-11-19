@@ -54,16 +54,27 @@ docker-compose up archiver
 
 (or to do it locally:)
 ```
-source .env  # uncomment local variables
+source .env  # uncomment the proper variables in there before this
 python -m archiver.archive_image
 ```
+
+You can verify that a new image exists in your local image store, and that the database has a new row.
 
 ### Backend App
 The backend app exposes an API with a `/get/<timestamp>` that returns the nearest image to that timestamp in the database.
 
-#### Running locally
-`python -m server.app`.
 
-#### Via docker
-`sh docker_build.sh`
-`sh docker_run.sh`
+To start the server:
+```
+docker-compose build server  # only need to do once
+docker-compose up server
+```
+
+Or locally:
+```
+source .env  # after modifying it appropriately
+python -m server.app
+```
+
+Exercise the server by visiting
+`http://127.0.0.1:5000/get/<timestamp>` in a browser.  Insert a recent unix timestamp (e.g. 1731955206), and you should see the nearest archived image!

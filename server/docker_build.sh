@@ -1,1 +1,0 @@
-docker build --no-cache -t waddell_wind_backend .

@@ -44,7 +44,7 @@ def get_nearest_image(timestamp):
             abort(404, description="No images found in the database.")
 
         # Check if the image file exists
-        image_filename = Path(nearest_image.image_path).name
+        image_filename = nearest_image.filename
         image_path = IMAGE_STORE_PATH / image_filename
         if not image_path.is_file():
             abort(404, description=f"Image file not found at expected path.")
