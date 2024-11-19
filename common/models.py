@@ -9,4 +9,4 @@ class Images(Base):
 
     id = Column(Integer, primary_key=True)
     archived_at = Column(TIMESTAMP(timezone=True), index=True, nullable=False)
-    image_path = Column(String, nullable=False)
+    filename = Column(String, nullable=False)

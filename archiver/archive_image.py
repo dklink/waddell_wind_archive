@@ -3,12 +3,13 @@
 #  and writes metadata to a postgresql database.
 # Assumes database has already been initialized and migrated.
 
-import subprocess
+import sys
 from datetime import datetime, timezone
 
 import requests
 
-from common import start_db_script
+sys.path.append("../common")
+
 from common.database import SessionLocal
 from common.image_store import IMAGE_STORE_PATH
 from common.models import Images
@@ -34,7 +35,7 @@ def archive_image():
     with SessionLocal() as session:
         new_image = Images(
             archived_at=archived_at,
-            image_path=str(img_path),
+            filename=str(img_path.name),
         )
         session.add(new_image)
         session.commit()
@@ -43,5 +44,4 @@ def archive_image():
 
 
 if __name__ == "__main__":
-    subprocess.run(["sh", start_db_script])
     archive_image()

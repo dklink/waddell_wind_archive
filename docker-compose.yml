@@ -1,0 +1,17 @@
+services:
+  archiver:
+    build:
+      context: .
+      dockerfile: archiver/Dockerfile # Dockerfile for the archiver service
+    env_file: ".env"
+    volumes:
+      - ${LOCAL_IMAGE_STORE}:${DOCKER_IMAGE_STORE}
+
+  webapp:
+    build:
+      context: .
+      dockerfile: webapp/Dockerfile # Dockerfile for the webapp service
+    environment:
+      - ENV_FILE=.env
+    ports:
+      - "5000:5000" # Adjust the port based on your web app's configuration

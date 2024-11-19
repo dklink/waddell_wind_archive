@@ -48,7 +48,13 @@ alembic revision --autogenerate
 ### Image archiver
 To archive an image:
 ```
-source .env
+docker-compose build archiver  # only need to do once
+docker-compose up archiver
+```
+
+(or to do it locally:)
+```
+source .env  # uncomment local variables
 python -m archiver.archive_image
 ```
 
