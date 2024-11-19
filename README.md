@@ -13,12 +13,11 @@ pip install -r requirements-dev.txt
 And something similar can be done for doing development work on the server.
 ### Postgres
 This application requires Postgres to be installed on the host machine.  Use the Postgers.app installation method found here: https://postgresapp.com/.
-Then add the command line tools to your path:
+Then add the command line tools to your path by running the following lines:
 ```
 sudo mkdir -p /etc/paths.d &&
 echo /Applications/Postgres.app/Contents/Versions/latest/bin | sudo tee /etc/paths.d/postgresapp
 ```
-to your shell profile.
 
 ### Environment Variables
 Make a copy of the `.env_sample` file named `.env`, and fill in the fields appropriately.
