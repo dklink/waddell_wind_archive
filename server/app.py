@@ -1,7 +1,6 @@
 from datetime import datetime, timezone
-from pathlib import Path
 
-from flask import Flask, abort, send_file
+from flask import Flask, abort, request, send_file
 from sqlalchemy import func
 
 from common.database import SessionLocal
@@ -13,17 +12,28 @@ app = Flask(__name__)
 LOCAL_DEV = False
 
 
-@app.route("/get/<timestamp>", methods=["GET"])
-def get_nearest_image(timestamp):
+@app.route("/images/nearest", methods=["GET"])
+def get_nearest_image():
     """
-    Fetch the image nearest to the given timestamp and return the image file.
+    Retrieve the image nearest to a given timestamp.
 
-    Args:
-        timestamp (str): A Unix timestamp (seconds since epoch).
+    This endpoint accepts a timestamp as a query parameter and returns metadata
+    for the image archived closest to the specified timestamp. If the timestamp
+    is missing, invalid, or no images are found, appropriate error messages are returned.
+
+    Query Parameters:
+    -----------------
+    timestamp : float (required)
+        The Unix timestamp (in seconds) to find the nearest image.
 
     Returns:
-        The image file or 404 if no images are found.
+        The image file or an appropriate error message
     """
+    # Get the 'timestamp' query parameter
+    timestamp = request.args.get("timestamp")
+    if not timestamp:
+        abort(400, "Missing 'timestamp' query parameter")
+
     try:
         # Convert the input timestamp to a datetime object
         target_time = datetime.fromtimestamp(float(timestamp), tz=timezone.utc)

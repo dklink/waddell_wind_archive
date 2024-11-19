@@ -58,7 +58,7 @@ docker-compose up server
 ```
 
 Exercise the server by visiting
-`http://127.0.0.1:5000/get/<timestamp>` in a browser.  Insert a recent unix timestamp (e.g. 1731955206), and you should see the nearest archived image!
+`http://127.0.0.1:5000/images/nearest?timestamp=1672531200` in a browser.  Insert a recent unix timestamp (e.g. 1731955206), and you should see the nearest archived image!
 
 ## Development
 If you make changes to the database, you can generate new migrations by navigating to `common/migrations` and running
