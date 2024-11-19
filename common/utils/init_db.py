@@ -1,10 +1,7 @@
 import os
-import subprocess
 
 import psycopg2
 from psycopg2 import sql
-
-from common import start_db_script
 
 
 def create_database(dbname, user, password, host="localhost", port="5432"):
@@ -26,7 +23,6 @@ def create_database(dbname, user, password, host="localhost", port="5432"):
 
 
 if __name__ == "__main__":
-    subprocess.run(["sh", start_db_script])
     create_database(
         dbname=os.environ["DB_NAME"],
         user=os.environ["DB_USERNAME"],
