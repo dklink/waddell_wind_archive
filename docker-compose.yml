@@ -1,5 +1,5 @@
 services:
-  archiver-local:
+  archiver:
     build:
       context: .
       dockerfile: archiver/Dockerfile
@@ -8,12 +8,6 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/root/.config/gcloud/application_default_credentials.json
     volumes:
       - ~/.config/gcloud:/root/.config/gcloud:ro # Mount your local gcloud credentials
-
-  archiver-cloud:
-    build:
-      context: .
-      dockerfile: archiver/Dockerfile
-    env_file: ".env"
 
   server:
     build:
