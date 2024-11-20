@@ -6,10 +6,9 @@
 import os
 import sys
 from datetime import datetime, timezone
-from multiprocessing import Value
-from pathlib import Path
 
 import requests
+from google.cloud import storage
 
 sys.path.append("../common")
 
@@ -20,15 +19,16 @@ LIVE_WADDELL_WIND_URL = "https://mapper.weatherflow.com/cgi-bin/tinyGv2Wap.gif?t
 
 
 def archive_image():
-    # 1. download image to local filesystem
+    # 1. download image data to local variable
     img_data = requests.get(LIVE_WADDELL_WIND_URL).content
     archived_at = datetime.now(timezone.utc)
     print(f"Image successfully downloaded at timestamp {archived_at.timestamp()}")
 
+    # 2. upload image to google cloud storage
     filename = f"{int(archived_at.timestamp())}.gif"
-    save_image(img_data=img_data, filename=filename)
+    save_image_to_gcloud(img_data=img_data, blob_name=filename)
 
-    # 2. write metadata into DB
+    # 3. write metadata into DB
     with SessionLocal() as session:
         new_image = Images(
             archived_at=archived_at,
@@ -40,22 +40,13 @@ def archive_image():
         print(f"New image metadata added to DB with ID: {new_image.id}")
 
 
-def save_image(img_data, filename):
-    storage_type = os.environ["IMAGE_STORE_TYPE"]
-    if storage_type == "gcs":
-        save_image_to_gcloud(img_data=img_data, filename=filename)
-    elif storage_type == "local":
-        save_image_to_local_store(img_data=img_data, filename=filename)
-    else:
-        raise ValueError(f"Unsupported IMAGE_STORE_TYPE: {storage_type}")
-
-
 def save_image_to_gcloud(img_data, blob_name):
     # Get bucket name from environment variable
-    bucket_name = os.getenv("IMAGE_STORE")
+    project_id = os.environ["GC_PROJECT_ID"]
+    bucket_name = os.environ["GCS_BUCKET_NAME"]
 
     # Initialize the Google Cloud Storage client and bucket
-    storage_client = storage.Client()
+    storage_client = storage.Client(project=project_id)
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(blob_name)
 
@@ -63,16 +54,6 @@ def save_image_to_gcloud(img_data, blob_name):
     blob.upload_from_string(img_data, content_type="image/gif")
 
     print(f"File uploaded to {bucket_name}/{blob_name}")
-
-
-def save_image_to_local_store(img_data, filename):
-    IMAGE_STORE_PATH = Path(os.environ["IMAGE_STORE_PATH"])
-    if not IMAGE_STORE_PATH.exists():
-        IMAGE_STORE_PATH.mkdir(parents=True)
-    img_path = IMAGE_STORE_PATH / filename
-    with open(img_path, "wb") as handler:
-        handler.write(img_data)
-    print(f"Image successfully written to disk at {img_path}")
 
 
 if __name__ == "__main__":
