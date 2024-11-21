@@ -65,8 +65,23 @@ Exercise the server by visiting
 `http://127.0.0.1:5000/images/nearest?timestamp=1672531200` in a browser.  Insert a recent unix timestamp (e.g. 1731955206), and you should see the nearest archived image!
 
 ## Setting up the cloud system
+We want to push our images up to a google cloud container registery.  First,
+```
+gcloud auth configure-docker
+```
+
+Then, just run
+```
+docker-compose build
+docker-compose push
+```
+
+And that should work!
+
 ### Archiver
 Scheduled cloud run function, deployed as a container
+
+
 
 ### Server
 Deployed as a container, probably managed kubernetes?

@@ -3,18 +3,17 @@ services:
     build:
       context: .
       dockerfile: archiver/Dockerfile
+    image: gcr.io/waddell-wind/waddell_wind-archiver:latest
     env_file: ".env"
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/root/.config/gcloud/application_default_credentials.json
     volumes:
-      - ~/.config/gcloud:/root/.config/gcloud:ro # Mount your local gcloud credentials
+      - ~/.config/gcloud:/root/.config/gcloud:ro # Mounts your local gcloud credentials
 
   server:
     build:
       context: .
       dockerfile: server/Dockerfile
     env_file: ".env"
-    volumes:
-      - ${LOCAL_IMAGE_STORE}:${DOCKER_IMAGE_STORE}
     ports:
       - 5000:5000
