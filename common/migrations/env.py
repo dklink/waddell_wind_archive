@@ -14,7 +14,7 @@ from common.models import Base
 config = context.config
 
 # override stock url from alembic.ini so we can pull values from .env file
-config.set_main_option("sqlalchemy.url", os.environ["LOCAL_DATABASE_URL"])
+config.set_main_option("sqlalchemy.url", os.environ["DATABASE_URL"])
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

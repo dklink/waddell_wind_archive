@@ -4,7 +4,7 @@ import psycopg2
 from psycopg2 import sql
 
 
-def create_database(dbname, user, password, host="localhost", port="5432"):
+def create_database(dbname, user, password, host, port="5432"):
     print(f"Creating database '{dbname}'...")
     try:
         connection = psycopg2.connect(
@@ -27,4 +27,5 @@ if __name__ == "__main__":
         dbname=os.environ["DB_NAME"],
         user=os.environ["DB_USERNAME"],
         password=os.environ["DB_PASSWORD"],
+        host=os.environ["DB_PUBLIC_IP"],
     )
