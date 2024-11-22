@@ -81,6 +81,9 @@ And that should work!
 ### Archiver
 Scheduled cloud run function, deployed as a container
 
+Create a cloud run function using the container we've just pushed.  Make sure you update the DATABASE_URL, GC_PROJECT_ID, and GCS_BUCKET_NAME env variables.  Also, the DATABASE_URL should be in unix socket format, e.g. `postgresql://<username>:<password>@/dbname?host=/cloudsql/PROJECT_ID:REGION:INSTANCE_NAME`, and you should add your cloud sql database in the "connections" configuration.
+
+Once you've verified the cloud run job works, you can schedule it to run hourly (or as often as you like) via the "triggers" tab.
 
 
 ### Server
