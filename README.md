@@ -79,15 +79,18 @@ docker-compose push
 And that should work!
 
 ### Archiver
-Scheduled cloud run function, deployed as a container
-
 Create a cloud run function using the container we've just pushed.  Make sure you update the DATABASE_URL, GC_PROJECT_ID, and GCS_BUCKET_NAME env variables.  Also, the DATABASE_URL should be in unix socket format, e.g. `postgresql://<username>:<password>@/dbname?host=/cloudsql/PROJECT_ID:REGION:INSTANCE_NAME`, and you should add your cloud sql database in the "connections" configuration.
 
 Once you've verified the cloud run job works, you can schedule it to run hourly (or as often as you like) via the "triggers" tab.
 
 
 ### Server
-Deploy as a cloud run function.
+The easiest solution is to deploy the container as a cloud run function.  Create a new cloud run service, select the latest `waddell-wind/service` container that you pushed to the artifact registry.  Follow similar setup to the archiver cloud run job (same env variables and set up connection to cloud sql database).  Make sure to allow unauthenticated invocations, and to allow all ingress.
+
+Once deployed, exercise the service by copying the endpoint url and appending the nearest image endpoint URI.  E.g.:
+`https://service-name-554112691235.us-central1.run.app/images/nearest?timestamp=173321300`
+
+That completes the backend system!
 
 ## Development
 If you make changes to the database, you can generate new migrations by navigating to `common/migrations` and running
