@@ -87,7 +87,7 @@ Once you've verified the cloud run job works, you can schedule it to run hourly 
 
 
 ### Server
-Deployed as a container, probably managed kubernetes?
+Deploy as a cloud run function.
 
 ## Development
 If you make changes to the database, you can generate new migrations by navigating to `common/migrations` and running
