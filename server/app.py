@@ -1,15 +1,15 @@
+import io
+import os
 from datetime import datetime, timezone
 
 from flask import Flask, abort, request, send_file
+from google.cloud import storage
 from sqlalchemy import func
 
 from common.database import SessionLocal
-from common.image_store import IMAGE_STORE_PATH
 from common.models import Images
 
 app = Flask(__name__)
-
-LOCAL_DEV = False
 
 
 @app.route("/images/nearest", methods=["GET"])
@@ -40,7 +40,19 @@ def get_nearest_image():
     except ValueError:
         abort(400, description="Invalid timestamp format. Use a Unix timestamp.")
 
-    # Query the database for the nearest image
+    nearest_image = get_nearest_image_from_db(target_time=target_time)
+
+    image_data = read_image_from_gcloud(blob_name=nearest_image.filename)
+
+    # Return the image file using send_file
+    return send_file(
+        io.BytesIO(image_data),
+        mimetype="image/gif",
+        as_attachment=False,  # Set to True to prompt download
+    )
+
+
+def get_nearest_image_from_db(target_time: datetime):
     with SessionLocal() as session:
         nearest_image = (
             session.query(Images)
@@ -49,23 +61,27 @@ def get_nearest_image():
             )  # Convert interval to seconds to allow use of ABS
             .first()
         )
-
         if not nearest_image:
             abort(404, description="No images found in the database.")
+        return nearest_image
 
-        # Check if the image file exists
-        image_filename = nearest_image.filename
-        image_path = IMAGE_STORE_PATH / image_filename
-        if not image_path.is_file():
-            abort(404, description=f"Image file not found at expected path.")
 
-        # Return the image file using send_file
-        return send_file(
-            image_path,
-            mimetype="image/gif",
-            as_attachment=False,  # Set to True to prompt download
-        )
+def read_image_from_gcloud(blob_name: str):
+    # Get bucket name from environment variable
+    project_id = os.environ["GC_PROJECT_ID"]
+    bucket_name = os.environ["GCS_BUCKET_NAME"]
+
+    # Initialize the Google Cloud Storage client and bucket
+    storage_client = storage.Client(project=project_id)
+    bucket = storage_client.bucket(bucket_name)
+    blob = bucket.blob(blob_name)
+    if not blob.exists():
+        abort(404, description=f"Image file not found in the bucket.")
+
+    content = blob.download_as_bytes()
+
+    return content
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

@@ -15,5 +15,9 @@ services:
       context: .
       dockerfile: server/Dockerfile
     env_file: ".env"
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/root/.config/gcloud/application_default_credentials.json
+    volumes:
+      - ~/.config/gcloud:/root/.config/gcloud:ro # Mounts your local gcloud credentials
     ports:
       - 5000:5000

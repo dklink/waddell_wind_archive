@@ -36,11 +36,11 @@ We'll use a GCS bucket for storing image files. You'll need to spin up a google 
 You'll need docker to build the application containers.  https://www.docker.com/get-started/
 
 ## Local Usage
-To run locally, you'll need to be able to authenticate to the GCS bucket.  You'll want to [install the gcloud command line tools](https://cloud.google.com/sdk/docs/install), then set up authentication by running
+You can run the archiver and server locally but they'll still connect to the cloud database and bucket.  So, you'll need to be able to authenticate to GCS.  Go ahead and [install the gcloud command line tools](https://cloud.google.com/sdk/docs/install), then set up authentication by running
 ```
 gcloud auth application-default login
 ```
-The keys created by this step will be passed into the docker container, it's handled in `docker-compose.yml`.
+The keys created by this step will be passed into the docker containers - it's handled in `docker-compose.yml`.
 
 
 ### Image archiver
@@ -53,7 +53,7 @@ docker-compose up archiver
 You can verify that a new image exists in your GCS bucket, and that your database "images" table has a new row.
 
 ### Backend App
-The backend app exposes an API with a `/get/<timestamp>` that returns the nearest image to that timestamp in the database.
+The backend app exposes an API with a `/images/nearest?timestamp=<timestamp>` that returns the nearest image to that timestamp in the database.
 
 To start the server locally:
 ```
