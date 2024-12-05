@@ -12,6 +12,13 @@ from common.models import Images
 app = Flask(__name__)
 
 
+@app.after_request
+def add_cors_headers(response):
+    # Allow requests from your frontend domain (or all origins with *)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
+
+
 @app.route("/images/nearest", methods=["GET"])
 def get_nearest_image():
     """
