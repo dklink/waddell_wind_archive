@@ -1,15 +1,16 @@
 # Use an official Python runtime as a parent image
 FROM python:3.13-slim
 
+# Install requirements
+COPY ./server/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
 # Copy the necessary directories into the container
 COPY ./server /waddell_wind/server
 COPY ./common /waddell_wind/common
 
 # Set the working directory inside the container to /waddell_wind
 WORKDIR /waddell_wind
-
-# Install any dependencies from the requirements.txt
-RUN pip install --no-cache-dir -r server/requirements.txt
 
 # Set environment variables
 ENV FLASK_APP=server.app
