@@ -1,8 +1,9 @@
+import base64
 import io
 import os
 from datetime import datetime, timezone
 
-from flask import Flask, abort, request, send_file
+from flask import Flask, abort, jsonify, request, send_file
 from google.cloud import storage
 from sqlalchemy import func
 
@@ -48,14 +49,15 @@ def get_nearest_image():
         abort(400, description="Invalid timestamp format. Use a Unix timestamp.")
 
     nearest_image = get_nearest_image_from_db(target_time=target_time)
-
+    image_archival_timestamp = nearest_image.archived_at.timestamp()
     image_data = read_image_from_gcloud(blob_name=nearest_image.filename)
+    encoded_image = base64.b64encode(image_data).decode("utf-8")
 
-    # Return the image file using send_file
-    return send_file(
-        io.BytesIO(image_data),
-        mimetype="image/gif",
-        as_attachment=False,  # Set to True to prompt download
+    return jsonify(
+        {
+            "image_archival_timestamp": image_archival_timestamp,
+            "image_data_base64": encoded_image,
+        }
     )
 
 
