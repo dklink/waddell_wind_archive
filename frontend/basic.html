@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Viewer</title>
+    <title>Waddell Creek Wind Data Archive</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -39,29 +39,34 @@
 </head>
 
 <body>
+    <!-- Website Description -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h1>Waddell Wind Data Archive</h1>
+        <p>This tool allows you to view historical charts of wind speed at Waddell Creek (Santa Cruz County, CA).</p>
+    </div>
+
     <label for="timestamp">Select Date and Time:</label>
     <input type="datetime-local" id="datetime">
-    <script>
-        const datetimeInput = document.getElementById('datetime');
-
-        // Get the current UTC time
-        const now = new Date();
-
-        // Adjust for Pacific Time (UTC-8)
-        const pacificTimeOffset = -8; // Pacific Standard Time (PST) offset in hours
-        const pacificTime = new Date(now.getTime() + pacificTimeOffset * 60 * 60 * 1000);
-
-        // Use toISOString and extract the datetime-local format
-        const pacificTimeString = pacificTime.toISOString().slice(0, 16); // Extract YYYY-MM-DDTHH:mm
-        datetimeInput.max = pacificTimeString;
-    </script>
 
     <button onclick="fetchImage()">Fetch Nearest Archived Image</button>
 
     <p id="error-message" style="color: red; display: none;"></p>
 
-    <div id="image-container" style="text-align: center;">
+    <div id="image-container" style="position: relative; text-align: center; width: 900px; height: 220px; margin: auto;">
+        <!-- The dynamically added image will go here -->
         <img id="image" style="display: block; margin: 0 auto; display:none;" alt="Image" />
+
+        <!-- X-axis Label -->
+        <div
+            style="position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold;">
+            Hour of Day (Pacific Time)
+        </div>
+
+        <!-- Y-axis Label -->
+        <div
+            style="position: absolute; top: 50%; left: -30px; transform: translate(-50%, -50%) rotate(-90deg); font-size: 16px; font-weight: bold;">
+            Wind Speed (kt)
+        </div>
     </div>
 
     <script>
@@ -113,7 +118,30 @@
                 console.error(error);
             }
         }
+        // Set the date picker to the current date and time
+        window.onload = () => {
+            const currentDate = new Date();
+            const localTime = new Date(currentDate.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' })); // Convert to Pacific Time
+            // Format local time to yyyy-MM-ddTHH:mm:ss (datetime-local format)
+            const localTimeISO = localTime.getFullYear().toString().padStart(4, '0') + '-' +
+                (localTime.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                localTime.getDate().toString().padStart(2, '0') + 'T' +
+                localTime.getHours().toString().padStart(2, '0') + ':' +
+                localTime.getMinutes().toString().padStart(2, '0') + ':' +
+                localTime.getSeconds().toString().padStart(2, '0');
 
+
+            // Set the value of the datetime picker to the local time
+            const datetimePicker = document.getElementById('datetime');
+            datetimePicker.value = localTimeISO;
+
+            // Set the max value of the datetime picker to the local time
+            datetimePicker.max = localTimeISO;
+
+            // Fetch the image using the current timestamp (local time)
+            const currentTimestamp = Math.floor(localTime.getTime() / 1000); // Convert to Unix timestamp in seconds
+            fetchImage(currentTimestamp);
+        };
     </script>
 </body>
 
