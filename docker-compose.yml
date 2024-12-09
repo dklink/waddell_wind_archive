@@ -17,9 +17,9 @@ services:
     image: gcr.io/waddell-wind/server:latest
     env_file: ".env"
     environment:
-      - PORT
+      - PORT=5000
       - GOOGLE_APPLICATION_CREDENTIALS=/root/.config/gcloud/application_default_credentials.json
     volumes:
       - ~/.config/gcloud:/root/.config/gcloud:ro # Mounts your local gcloud credentials
     ports:
-      - "${PORT}:${PORT}"
+      - 5000:5000
