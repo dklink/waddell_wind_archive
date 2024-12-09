@@ -19,7 +19,7 @@ The GCS Bucket and Postgres Configurations are in `main.tf`.  First, iniliatize 
 Then, review the changes with `terraform plan`, and apply with `terraform apply`.
 
 ### Complete .env setup
-Now that the resources are provisioned, fill in any remaining variables in .env, such as the database public IP.
+Now that the resources are provisioned, fill in any remaining variables in .env, such as the database public IP.  You can view that in the cloud console.
 
 ## Initialize Database
 
@@ -91,10 +91,17 @@ docker-compose push
 And that should work!
 
 ### Archiver
-Create a cloud run function using the container we've just pushed.  Make sure you update the DATABASE_URL, GC_PROJECT_ID, and GCS_BUCKET_NAME env variables.  Also, the DATABASE_URL should be in unix socket format, e.g. `postgresql://<username>:<password>@/dbname?host=/cloudsql/PROJECT_ID:REGION:INSTANCE_NAME`, and you should add your cloud sql database in the "connections" configuration.
-
-Once you've verified the cloud run job works, you can schedule it to run hourly (or as often as you like) via the "triggers" tab.
-
+We'll need to enable a few gcloud cli services:
+```
+gcloud services enable run.googleapis.com
+gcloud services enable cloudscheduler.googleapis.com
+```
+Then run
+```
+source .env
+bash infrastructure/deploy_archiver.sh
+```
+This only needs to be done once.  The job points to the 'latest' tagged archiver Docker image, so to update the job with a newly built image, simply push the image to the Google Container registry with `docker-compose push`.
 
 ### Server
 The easiest solution is to deploy the container as a cloud run function.  Create a new cloud run service, select the latest `waddell-wind/service` container that you pushed to the artifact registry.  Follow similar setup to the archiver cloud run job (same env variables and set up connection to cloud sql database).  Make sure to allow unauthenticated invocations, and to allow all ingress.
