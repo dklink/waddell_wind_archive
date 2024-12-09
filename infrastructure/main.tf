@@ -26,6 +26,11 @@ variable "postgres_password" {
   sensitive   = true
 }
 
+variable "frontend_bucket_name" {
+    description = "The name of the frontend bucket"
+    type        = string 
+}
+
 # Provider definition
 provider "google" {
   project = var.gcp_project_id
@@ -57,4 +62,21 @@ resource "google_sql_user" "default_user" {
   name     = var.postgres_user_name
   password = var.postgres_password
   instance = google_sql_database_instance.postgres_instance.name
+}
+
+# Frontend Bucket Setup
+resource "google_storage_bucket" "frontend_bucket" {
+  name          = var.frontend_bucket_name
+  location      = "us-central1"
+
+  uniform_bucket_level_access = true
+}
+
+resource "google_storage_bucket_iam_binding" "frontend_public_access" {
+  bucket = google_storage_bucket.frontend_bucket.name
+  role   = "roles/storage.objectViewer"
+
+  members = [
+    "allUsers"
+  ]
 }

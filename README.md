@@ -45,6 +45,13 @@ alembic upgrade head
 ```
 That's it!
 
+### Creating new migrations
+If you make changes to the database, you can generate new migrations by navigating to `common/migrations` and running
+```
+alembic revision --autogenerate
+```
+
+
 ## Run Applications Locally
 ### Docker
 You'll need docker to build the application containers.  https://www.docker.com/get-started/
@@ -77,7 +84,7 @@ Exercise the server by visiting
 You will need to modify the `apiURL` in `frontend/basic.html`, to point to `http://127.0.0.1:5000/...` rather than a public URL.  Then, launch a local http server using `python -m http.server 8000`, then navigate to `127.0.0.1:8000` in a browser.  Navigate to and open `frontend/basic.html`, and try it out!
 
 ## Set up applications in the cloud
-We want to push our images up to a google cloud container registery.  First,
+First we'll want to push our images up to a google cloud container registery.  First,
 ```
 gcloud auth configure-docker
 ```
@@ -104,15 +111,17 @@ bash infrastructure/deploy_archiver.sh
 This only needs to be done once.  The job points to the 'latest' tagged archiver Docker image, so to update the job with a newly built image, simply push the image to the Google Container registry with `docker-compose push`.
 
 ### Server
-The easiest solution is to deploy the container as a cloud run function.  Create a new cloud run service, select the latest `waddell-wind/service` container that you pushed to the artifact registry.  Follow similar setup to the archiver cloud run job (same env variables and set up connection to cloud sql database).  Make sure to allow unauthenticated invocations, and to allow all ingress.
+Just run
+```
+source .env
+bash infrastructure/deploy_server.sh
+```
+Same as archiver, this only needs to be done once, as it's pinned to the 'latest' tagged server Docker image - update via pushing a new one.
 
 Once deployed, exercise the service by copying the endpoint url and appending the nearest image endpoint URI.  E.g.:
 `https://service-name-554112691235.us-central1.run.app/images/nearest?timestamp=173321300`
 
-That completes the backend system!
+Or, change the local frontend apiURL to this and give it a try locally.
 
-## Development
-If you make changes to the database, you can generate new migrations by navigating to `common/migrations` and running
-```
-alembic revision --autogenerate
-```
+### Frontend
+I haven't automated this part, as it's a pretty lightweight deployment.  You'll just want to set the apiURL in the frontend to the hosted server endpoint, upload the html file to a GCS bucket (you could create a new one for this), set it to public, and copy the public URL.  That's all!
