@@ -1,5 +1,9 @@
 # README
 
+This is a project I undertook to better understand deploying cloud applications.  It's a simple image archival / retrieval system.  It's been archiving since late Nov. 2024, and you can view a basic frontend into the archive [here](https://storage.googleapis.com/waddell-wind-misc/basic.html)!
+
+Following are instructions for setting up the system yourself!
+
 ## Setting Up Cloud Infrastructure
 We can provision resources in an automated and more reproducible way using Terraform.  Install terraform and navigate to the `infrastructure` directory.
 
@@ -13,7 +17,7 @@ gcloud auth application-default login
 Make a copy of the `.env_sample` file named `.env`, and fill in the missing fields appropriately.  Note that some of the variables can't be set until the resources are provisioned, such as the database public IP.  Load the environmental variables with `source .env`.
 
 ### Provision Storage Resources
-The GCS Bucket and Postgres Configurations are in `main.tf`.  First, iniliatize terraform via
+The GCS Image and Frontend buckets and Postgres Configurations are in `main.tf`.  First, iniliatize terraform via
 `terraform init`.
 
 Then, review the changes with `terraform plan`, and apply with `terraform apply`.
@@ -69,7 +73,7 @@ docker-compose up archiver
 You can verify that a new image exists in your GCS bucket, and that your database's "images" table has a new row.
 
 ### Backend App
-The backend app exposes an API with a `/images/nearest?timestamp=<timestamp>` that returns the nearest image to that timestamp in the database.
+The backend app exposes an API with a single endpoint, which returns the nearest image to a provided timestamp.
 
 To start the server locally:
 ```
@@ -78,7 +82,7 @@ docker-compose up server
 ```
 
 Exercise the server by visiting
-`http://127.0.0.1:5000/images/nearest?timestamp=<timsestamp>` in a browser.  Insert a somewhat recent unix timestamp (e.g. 1731955206), and you should get a response that includes the image data and the time of archival.
+`http://127.0.0.1:5000/images/nearest?timestamp=<timestamp>` in a browser.  Insert a somewhat recent unix timestamp (e.g. 1731955206), and you should get a response that includes the image data and the time of archival.
 
 ### Frontend
 You will need to modify the `apiURL` in `frontend/basic.html`, to point to `http://127.0.0.1:5000/...` rather than a public URL.  Then, launch a local http server using `python -m http.server 8000`, then navigate to `127.0.0.1:8000` in a browser.  Navigate to and open `frontend/basic.html`, and try it out!
@@ -124,4 +128,11 @@ Once deployed, exercise the service by copying the endpoint url and appending th
 Or, change the local frontend apiURL to this and give it a try locally.
 
 ### Frontend
-I haven't automated this part, as it's a pretty lightweight deployment.  You'll just want to set the apiURL in the frontend to the hosted server endpoint, upload the html file to a GCS bucket (you could create a new one for this), set it to public, and copy the public URL.  That's all!
+To deploy the frontend, just run
+```
+bash infrastructure/deploy_frontend.sh <API_URL>
+```
+Where <API_URL> is the url of the deployed cloud run server.  This script will inject the url into the html, then upload the file to the public frontend bucket.  Make sure you haven't modified the html file and removed the {{API_URL}} tag, which is used for the injection.
+
+# Thanks
+That's all!  Thanks for checking out this project.

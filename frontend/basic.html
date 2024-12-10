@@ -93,7 +93,7 @@
                 const date = new Date(datetimeInput);  // Get Date object from the input
                 const timestamp = Math.floor(date.getTime() / 1000);  // Convert to Unix timestamp (seconds)
 
-                const apiUrl = `https://image-server-554112691235.us-central1.run.app/images/nearest?timestamp=${timestamp}`;
+                const apiUrl = `{{API_URL}}/images/nearest?timestamp=${timestamp}`;
 
                 const response = await fetch(apiUrl, {
                     method: 'GET',
