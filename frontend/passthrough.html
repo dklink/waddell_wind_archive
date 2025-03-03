@@ -1,0 +1,62 @@
+<!--Just displays the gif from the live website directly, bypassing the archive-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waddell Creek Wind Data Archive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #image-container {
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 500px;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Website Description -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h1>Waddell Wind Data Archive</h1>
+        <p>Archive has been shut down due to server costs and low traffic. The live data is still displayed below.</p>
+    </div>
+
+
+    <p id="error-message" style="color: red; display: none;"></p>
+
+    <div id="image-container"
+        style="position: relative; text-align: center; width: 900px; height: 220px; margin: auto;">
+        <h2 id="image-title" style="text-align: center; font-size: 18px;"></h2>
+        <img src="https://mapper.weatherflow.com/cgi-bin/tinyGv2Wap.gif?t=213&d=t&c=0&cb=41741&wid=1&width=900&height=220&sh=0&eh=23"
+            style="display: block; margin: 0 auto;" alt="Image" />
+
+        <!-- X-axis Label -->
+        <div
+            style="position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: bold;">
+            Hour of Day (Pacific Time)
+        </div>
+
+        <!-- Y-axis Label -->
+        <div
+            style="position: absolute; top: 50%; left: -30px; transform: translate(-50%, -50%) rotate(-90deg); font-size: 16px; font-weight: bold;">
+            Wind Speed (kt)
+        </div>
+    </div>
+</body>
+
+</html>
